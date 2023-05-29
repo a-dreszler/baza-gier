@@ -8,40 +8,12 @@ class Game {
         this.description = description;
     }
     
-    get titleCol() {
-        let titleCol = document.createElement("td");
-        titleCol.appendChild(document.createTextNode(this.title));
-        titleCol.classList.add("title");
-        return titleCol;
+    get titleNode() {
+        return document.createTextNode(this.title);
     }
 
-    get ratingCol() {
-        let ratingCol = document.createElement("td");
-        ratingCol.appendChild(document.createTextNode(this.rating));
-        ratingCol.classList.add("rating");
-        return ratingCol;
-    }
-
-    get descriptionCol() {
-        let descCol = document.createElement("td");
-        let descButton = getDescButton();
-        descCol.appendChild(descButton);
-        return descCol;
-    }
-
-    get deleteCol() {
-        let deleteCol = document.createElement("td");
-        let deleteButton = getDeleteButton();
-        deleteCol.appendChild(deleteButton);
-        return deleteCol;
-    }
-
-    get gameAsTableRow() {
-        let row = document.createElement("tr");
-
-        row.append(this.titleCol, this.ratingCol, this.descriptionCol, this.deleteCol);
-
-        return row;
+    get ratingNode() {
+        return document.createTextNode(this.rating);
     }
 }
 
@@ -121,21 +93,31 @@ function clearForm() {
 
 function addGameToTable(event) {
     event.preventDefault();
-    let game = new Game(
-        document.getElementById("title").value,
-        document.getElementById("rating").value,
-        document.getElementById("description").value
-    );
-    
-    addRow(game);
+    let title = document.getElementById("title").value;
+    let rating = document.getElementById("rating").value;
+    let description = document.getElementById("description").value;
+
+    if (title !== '' && rating !== '' && description !== '') {
+        let game = new Game(title, rating, description);
+        addRow(game);
+    }
 }
 
 function addRow(game) {
     games.push(game);
 
-    let row = game.gameAsTableRow;
+    let tbody = document.getElementById("games");
 
-    document.getElementById("games").appendChild(row);
+    let row = tbody.insertRow();
+    let titleCell = row.insertCell();
+    titleCell.appendChild(game.titleNode);
+    titleCell.classList.add("title");
+    let ratingCell = row.insertCell();
+    ratingCell.appendChild(game.ratingNode);
+    let descCell = row.insertCell();
+    descCell.appendChild(getDescButton());
+    let deleteCell = row.insertCell();
+    deleteCell.appendChild(getDeleteButton());
 }
 
 createTestGames();
