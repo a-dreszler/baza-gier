@@ -1,0 +1,38 @@
+table, th, td {
+    border: 1px solid black;
+}
+
+table {
+    width: 80%;
+}
+
+th {
+    background-color: lightgray;
+}
+
+form {
+    padding: 1em;
+}
+
+table {
+    margin: auto;
+}
+
+h1 {
+    text-align: center;
+}
+
+button {
+    display: block;
+    margin: 0 auto;
+}
+
+input {
+    display: block;
+    margin: 0 auto;
+    width: 50%;
+}
+
+#description-show {
+    text-align: center;
+}
