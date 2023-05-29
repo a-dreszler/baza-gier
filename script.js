@@ -28,23 +28,6 @@ function createTestGames() {
     testGames.forEach(addRow);
 }
 
-function deleteGameFromArray(title) {
-    for (let i = 0; i < games.length; i++) {
-        let game = games[i];
-        if (game.title === title) {
-            games.splice(i, 1);
-        }
-    }
-}
-
-function getGame(title) {
-    for (let g of games) {
-        if (g.title === title) {
-            return g;
-        }
-    }
-}
-
 function getDescButton() {
     let button = document.createElement("button");
     button.appendChild(document.createTextNode("Pokaż szczegóły"));
@@ -62,25 +45,20 @@ function getDeleteButton() {
 function registerAddGame() {
     let addGameButton = document.getElementById("add-game-button");
     addGameButton.addEventListener("click", (event) => addGameToTable(event));
-    addGameButton.addEventListener("click", clearForm);
 }
 
 function deleteGame(event) {
-    let gameRow = event.target.parentElement.parentElement;
-    let title = gameRow.getElementsByClassName("title").item(0).innerText;
-    deleteGameFromArray(title);
-    gameRow.remove();
+    let gameIndex = event.target.parentElement.parentElement.rowIndex - 1;
+    games.splice(gameIndex, 1);
+    document.getElementById("game-table").deleteRow(gameIndex);
 }
 
 function viewDescription(event) {
-    let gameRow = event.target.parentElement.parentElement;
-    let title = gameRow.getElementsByClassName("title").item(0).innerText;
-    let game = getGame(title);
+    let gameIndex = event.target.parentElement.parentElement.rowIndex - 1;
+    let game = games[gameIndex];
     if (game !== undefined) {
-        let descDiv = document.getElementById("description-show");
-        let paragraph = document.createElement("p");
-        paragraph.appendChild(document.createTextNode("Opis gry: " + game.description));
-        descDiv.replaceChildren(paragraph);
+        let descParagraph = document.getElementById("game-description");
+        descParagraph.replaceChildren(document.createTextNode("Opis gry: " + game.description));
     }
 }
 
@@ -96,22 +74,27 @@ function addGameToTable(event) {
     let title = document.getElementById("title").value;
     let rating = document.getElementById("rating").value;
     let description = document.getElementById("description").value;
-
-    if (title !== '' && rating !== '' && description !== '') {
+    if (title !== '' && rating !== '' && description !== '' && isRatingValid(rating)) {
+        clearForm();
         let game = new Game(title, rating, description);
         addRow(game);
+    } else {
+        alert("Nieprawidłowy format danych. Pola nie mogą być puste, a ocena musi zawierać się między 1, a 10.");
     }
+}
+
+function isRatingValid(rating) {
+    return rating >=1 && rating <= 10;
 }
 
 function addRow(game) {
     games.push(game);
 
-    let tbody = document.getElementById("games");
+    let tbody = document.getElementById("game-table");
 
     let row = tbody.insertRow();
     let titleCell = row.insertCell();
     titleCell.appendChild(game.titleNode);
-    titleCell.classList.add("title");
     let ratingCell = row.insertCell();
     ratingCell.appendChild(game.ratingNode);
     let descCell = row.insertCell();
